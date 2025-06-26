@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Application: The Tumoro Family Tree Score</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base styles for body using the chosen palette */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f4; /* Warm Neutral background */
+            color: #3d405b; /* Dark Blue for text */
+        }
+
+        /* Chart container styling for responsiveness and centering */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px; /* Max width for larger screens */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height for charts */
+            max-height: 350px;
+        }
+
+        /* Adjust chart container height for medium screens and up */
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+
+        /* Gradient text for emphasis */
+        .gradient-text {
+            background: linear-gradient(90deg, #81b29a, #e07a5f); /* Teal to Terracotta gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Card styling for content sections */
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* Rounded corners */
+            padding: 2rem 1.5rem; /* Padding for mobile */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); /* Subtle shadow */
+            border: 1px solid #f0efed; /* Light border */
+        }
+
+        /* Adjust card padding for medium screens and up */
+        @media (min-width: 768px) {
+            .card {
+                padding: 2.5rem;
+            }
+        }
+
+        /* Flow arrow styling for the impact section */
+        .flow-arrow {
+            font-size: 2rem;
+            line-height: 1;
+            color: #e07a5f; /* Terracotta color */
+            transform: rotate(90deg); /* Rotate for vertical flow on mobile */
+        }
+
+        /* Revert flow arrow rotation for horizontal flow on medium screens and up */
+        @media (min-width: 768px) {
+            .flow-arrow {
+                transform: rotate(0deg);
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="max-w-5xl mx-auto p-4 md:p-8">
+
+        <header class="text-center my-12 md:my-16">
+            <h1 class="text-4xl md:text-6xl font-black mb-3 text-[#3d405b]">The <span class="gradient-text">Family Tree Score</span></h1>
+            <p class="text-lg md:text-xl font-light text-gray-500 max-w-3xl mx-auto">A foundational layer of credibility, built on the strength of your verified community connections.</p>
+        </header>
+
+        <main class="space-y-12 md:space-y-16">
+
+            <section id="introduction" class="card">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold mb-4 text-[#3d405b]">Beyond the Resume</h2>
+                    <p class="text-gray-600 max-w-3xl mx-auto mb-8">This application explains the **Family Tree Score**, a unique component of the Tumoro platform. It's designed to provide a deeper, more holistic view of a talent's reliability by leveraging verified genealogical data from FamilySearch. We'll explore what it is, how it works, and how it benefits everyone in the Tumoro ecosystem.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="text-gray-700">
+                        <h3 class="font-bold text-xl mb-2 text-[#81b29a]">What is the Family Tree Score?</h3>
+                        <p>It's a static score that reflects the strength of an individual's verified family and community connections. By linking a FamilySearch account, talents can add a powerful, verifiable dimension to their professional profile, signaling deep-rooted reliability and trust that a simple work history cannot convey.</p>
+                    </div>
+                    <div>
+                        <div class="chart-container" role="img" aria-label="Bar chart showing credibility boost from Family Tree Score">
+                            <canvas id="credibilityBoostChart"></canvas>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-2">The score provides a significant boost to a talent's baseline credibility.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="calculation" class="card">
+                <h2 class="text-3xl font-bold text-center mb-4 text-[#3d405b]">Deconstructing the Score</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">To ensure fairness and transparency, the Family Tree Score is calculated based on several key factors from a user's connected FamilySearch profile. This section breaks down the components that contribute to the final score, which is calculated once upon connection.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="order-2 md:order-1 text-gray-700 space-y-4">
+                        <div class="p-4 rounded-lg border-l-4" style="border-color: #81b29a; background-color: #f0f7f5;">
+                            <h4 class="font-bold">Depth of Verified Lineage</h4>
+                            <p class="text-sm">Measures how many generations of the family tree are verified by official records.</p>
+                        </div>
+                        <div class="p-4 rounded-lg border-l-4" style="border-color: #e07a5f; background-color: #fcf3f1;">
+                            <h4 class="font-bold">Breadth of Connections</h4>
+                            <p class="text-sm">Considers the number of verified individuals connected within the tree.</p>
+                        </div>
+                        <div class="p-4 rounded-lg border-l-4" style="border-color: #f4a261; background-color: #fef6ee;">
+                            <h4 class="font-bold">Data Consistency</h4>
+                            <p class="text-sm">Assesses the accuracy and alignment of data with genealogical standards.</p>
+                        </div>
+                        <div class="p-4 rounded-lg border-l-4" style="border-color: #a8a29e; background-color: #f5f5f4;">
+                            <h4 class="font-bold">Community Hub Connections</h4>
+                            <p class="text-sm">Identifies links to verified historical or present-day community groups.</p>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <div class="chart-container" role="img" aria-label="Doughnut chart showing the weighted composition of the Family Tree Score">
+                            <canvas id="calculationFactorsChart"></canvas>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-2">A weighted combination of factors creates a single, holistic score.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="impact" class="card">
+                <h2 class="text-3xl font-bold text-center mb-4 text-[#3d405b]">Impact on Tumoro Rating</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">The Family Tree Score doesn't replace the dynamic ELO Rating; it enhances it. This section illustrates how the static, foundational trust from the Tree Score combines with the interactive ELO score to create a more comprehensive and reliable final rating for each talent.</p>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 text-center">
+                    <div class="p-6 rounded-lg border border-gray-200 w-full md:w-auto flex-1">
+                        <p class="text-sm font-medium text-gray-500">Dynamic ELO Score</p>
+                        <p class="text-xl md:text-2xl font-bold text-[#3d405b]">From Reviews & Interactions</p>
+                    </div>
+                    <div class="flow-arrow" aria-hidden="true">+</div>
+                    <div class="p-6 rounded-lg border border-gray-200 w-full md:w-auto flex-1">
+                        <p class="text-sm font-medium text-gray-500">Tree Score Bonus</p>
+                        <p class="text-xl md:text-2xl font-bold text-[#81b29a]">From Verified Connections</p>
+                    </div>
+                    <div class="flow-arrow" aria-hidden="true">=</div>
+                    <div class="p-6 rounded-lg bg-[#3d405b] text-white w-full md:w-auto flex-1 shadow-lg">
+                        <p class="text-sm font-medium text-gray-300">Final Tumoro Rating</p>
+                        <p class="text-xl md:text-2xl font-black">Holistic Credibility</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="benefits" class="card">
+                <h2 class="text-3xl font-bold text-center mb-4 text-[#3d405b]">A Win-Win for the Ecosystem</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">The integration of the Family Tree Score offers distinct advantages to both the talented individuals seeking roles and the employers looking to hire them. This creates a more trustworthy and efficient marketplace for everyone involved.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <div class="chart-container" role="img" aria-label="Radar chart illustrating key advantages for talents and employers">
+                            <canvas id="keyAdvantagesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="text-gray-700 space-y-4">
+                        <div>
+                            <h3 class="font-bold text-lg text-[#81b29a]">For Talents</h3>
+                            <p>Provides a unique way to stand out in a competitive market. It helps new talents establish a baseline of trust quickly and offers a powerful signal of integrity beyond professional skills.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-[#e07a5f]">For Employers</h3>
+                            <p>Adds a crucial dimension to talent assessment, offering a passive indicator of a candidate's background and reliability. It's especially valuable for roles where long-term trust is paramount.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="privacy" class="card">
+                <h2 class="text-3xl font-bold text-center mb-4 text-[#3d405b]">Your Privacy is Paramount</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">We understand that connecting genealogical data requires the highest level of trust and security. The entire system is built on a foundation of user control and data privacy, ensuring you are always in charge of your information.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                        <span class="text-4xl" role="img" aria-label="Key icon representing explicit consent">🔑</span>
+                        <h3 class="font-bold mt-4 text-lg">Explicit Consent</h3>
+                        <p class="text-gray-600 text-sm mt-2">No connection is ever made without your direct permission through the secure FamilySearch authentication process.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                        <span class="text-4xl" role="img" aria-label="Shield icon representing data minimization">🛡️</span>
+                        <h3 class="font-bold mt-4 text-lg">Data Minimization</h3>
+                        <p class="text-gray-600 text-sm mt-2">We only process the metadata needed for the score, never storing sensitive, private genealogical details on our servers.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                        <span class="text-4xl" role="img" aria-label="Power plug icon representing total control">🔌</span>
+                        <h3 class="font-bold mt-4 text-lg">Total Control</h3>
+                        <p class="text-gray-600 text-sm mt-2">Disconnect your account at any time to instantly remove the score and its influence from your profile.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-12 md:mt-16 py-8 border-t border-gray-200">
+            <p class="font-bold text-lg text-[#3d405b]">Tumoro</p>
+            <p class="text-gray-500 text-sm mt-1">Every talent vetted. Every hire reliable.</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Define color palette for charts
+            const palette = {
+                darkBlue: '#3d405b',
+                teal: '#81b29a',
+                terracotta: '#e07a5f',
+                sand: '#f4a261', // Added for calculation factors
+                stone: '#a8a29e' // Added for calculation factors and bar chart
+            };
+
+            // Helper function for wrapping long labels in Chart.js (if needed, though not explicitly used for current labels)
+            const wrapLabel = (str, maxWidth = 16) => {
+                if (!str || typeof str !== 'string') return '';
+                if (str.length <= maxWidth) return str;
+                const words = str.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + ' ' + word).trim().length > maxWidth && currentLine.length > 0) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = (currentLine + ' ' + word).trim();
+                    }
+                }
+                if (currentLine.length > 0) {
+                    lines.push(currentLine);
+                }
+                return lines;
+            };
+
+            // Shared tooltip callback for consistent tooltip behavior
+            const sharedTooltipCallback = {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                    return label.join(' '); // Join array labels for tooltip
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // Credibility Boost Bar Chart
+            const credibilityBoostCtx = document.getElementById('credibilityBoostChart');
+            if (credibilityBoostCtx) {
+                new Chart(credibilityBoostCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Standard Profile', 'Profile with Tree Score'],
+                        datasets: [{
+                            label: 'Baseline Credibility',
+                            data: [60, 95], // Example data for before and after
+                            backgroundColor: [palette.stone, palette.teal], // Use palette colors
+                            borderColor: [palette.stone, palette.teal],
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            barPercentage: 0.6 // Adjust bar width
+                        }]
+                    },
+                    options: {
+                        ...sharedTooltipCallback, // Apply shared tooltip
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                suggestedMax: 100, // Max value for the credibility index
+                                grid: { drawOnChartArea: false }, // Hide horizontal grid lines
+                                ticks: { display: false } // Hide y-axis ticks
+                            },
+                            x: {
+                                grid: { display: false } // Hide vertical grid lines
+                            }
+                        },
+                        plugins: {
+                            ...sharedTooltipCallback.plugins,
+                            legend: { display: false }, // Hide legend as bars are self-explanatory
+                            title: { 
+                                display: true, 
+                                text: 'Baseline Credibility Index',
+                                color: palette.darkBlue, // Title color
+                                font: { size: 16, weight: 'bold' } // Title font
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Calculation Factors Doughnut Chart
+            const calculationFactorsCtx = document.getElementById('calculationFactorsChart');
+            if (calculationFactorsCtx) {
+                new Chart(calculationFactorsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Depth of Lineage', 'Breadth of Connections', 'Data Consistency', 'Community Links'],
+                        datasets: [{
+                            label: 'Weight in Score',
+                            data: [40, 30, 20, 10], // Example weighting
+                            backgroundColor: [palette.teal, palette.terracotta, palette.sand, palette.stone], // Use palette colors
+                            hoverOffset: 8, // Offset on hover for visual effect
+                            borderColor: '#f8f7f4', // Background color for border effect
+                            borderWidth: 5
+                        }]
+                    },
+                    options: {
+                        ...sharedTooltipCallback, // Apply shared tooltip
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            ...sharedTooltipCallback.plugins,
+                            legend: {
+                                position: 'bottom', // Position legend at the bottom
+                                labels: { 
+                                    boxWidth: 15, 
+                                    padding: 15,
+                                    color: palette.darkBlue // Legend label color
+                                }
+                            },
+                            title: { 
+                                display: true, 
+                                text: 'Score Composition Factors',
+                                color: palette.darkBlue, // Title color
+                                font: { size: 16, weight: 'bold' } // Title font
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Key Advantages Radar Chart
+            const keyAdvantagesCtx = document.getElementById('keyAdvantagesChart');
+            if (keyAdvantagesCtx) {
+                new Chart(keyAdvantagesCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: [
+                            'Credibility', 
+                            'Trust Signal', 
+                            'Differentiation', 
+                            'Employer Insight', 
+                            'Reliability'
+                        ],
+                        datasets: [{
+                            label: 'Advantage',
+                            data: [9, 9, 8, 7, 8], // Example advantage scores
+                            fill: true,
+                            backgroundColor: 'rgba(224, 122, 95, 0.2)', // Light terracotta fill
+                            borderColor: palette.terracotta, // Terracotta border
+                            pointBackgroundColor: palette.terracotta,
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: palette.terracotta
+                        }]
+                    },
+                    options: {
+                        ...sharedTooltipCallback, // Apply shared tooltip
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                suggestedMin: 0,
+                                suggestedMax: 10, // Max value for advantage scores
+                                pointLabels: { 
+                                    font: { size: 11 },
+                                    color: palette.darkBlue // Point label color
+                                },
+                                grid: { color: '#e5e7eb' }, // Light grey grid lines
+                                angleLines: { color: '#e5e7eb' }, // Light grey angle lines
+                                ticks: {
+                                    display: false // Hide numerical ticks on radar chart
+                                }
+                            }
+                        },
+                        plugins: {
+                            ...sharedTooltipCallback.plugins,
+                            legend: { display: false }, // Hide legend
+                            title: { 
+                                display: true, 
+                                text: 'Key Advantages Profile',
+                                color: palette.darkBlue, // Title color
+                                font: { size: 16, weight: 'bold' } // Title font
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

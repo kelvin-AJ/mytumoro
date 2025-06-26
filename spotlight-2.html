@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tumoro Video Spotlights - TikTok Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f4;
+            color: #3d405b;
+            /* Ensure body takes full viewport height for scroll snap */
+            height: 100vh;
+            overflow: hidden; /* Hide default scrollbar */
+        }
+
+        /* Main container for video sections */
+        .video-feed {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory; /* Enable vertical scroll snapping */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+        }
+
+        /* Hide scrollbar for Chrome, Safari, Opera */
+        .video-feed::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Individual video section */
+        .video-section {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start; /* Snap to the start of each section */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: black; /* Default background for video area */
+            color: white; /* Text color for overlays */
+            overflow: hidden; /* Prevent content overflow */
+        }
+
+        .video-section video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            object-fit: cover; /* Ensure video covers the entire section */
+        }
+
+        .content-overlay {
+            position: relative;
+            z-index: 1; /* Ensure overlay content is above video */
+            padding: 1rem;
+            text-align: center;
+            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Align content to the bottom */
+            pointer-events: none; /* Allow clicks to pass through to video */
+        }
+
+        .content-overlay > * {
+            pointer-events: auto; /* Re-enable pointer events for actual content */
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #81b29a, #e07a5f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 0.9rem;
+        }
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+        .metric-item span:first-child {
+            color: rgba(255,255,255,0.7);
+        }
+        .metric-item span:last-child {
+            font-weight: bold;
+        }
+
+        .play-pause-toggle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 0 15px rgba(0,0,0,0.5);
+            cursor: pointer;
+            z-index: 2; /* Above video and overlay */
+            transition: opacity 0.2s ease;
+        }
+        .video-section.playing .play-pause-toggle {
+            opacity: 0;
+        }
+        .video-section:not(.playing):hover .play-pause-toggle {
+            opacity: 1;
+        }
+        /* Style for when video is paused (icon visible) */
+        .video-section.paused .play-pause-toggle {
+            opacity: 1;
+        }
+        
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="video-feed">
+        </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const talentsData = [
+                { id: 1, name: "Aisha Adeniyi", headline: "Senior AI/ML Engineer", video: {poster: "https://images.unsplash.com/photo-1620603126359-3a32501a3501?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzM5NTd8MHwxfHNlYXJjaHw3OXx8cG9ydHJhaXR8ZW58MHx8fHwxNzA4NTQ0NDU0fDA&ixlib=rb-4.0.3&q=80&w=640", src: "https://assets.mixkit.co/videos/preview/mixkit-african-american-businesswoman-in-a-call-4318-large.mp4"}, elo: 1850, treeScore: 85, experience: 7, interviewScore: 4.8 },
+                { id: 2, name: "David Chen", headline: "Lead Product Designer (UX/UI)", video: {poster: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzM5NTd8MHwxfHNlYXJjaHwzM3x8cG9ydHJhaXR8ZW58MHx8fHwxNzA4NTQ0NDU0fDA&ixlib=rb-4.0.3&q=80&w=640", src: "https://assets.mixkit.co/videos/preview/mixkit-young-man-working-on-his-laptop-in-a-cafe-33827-large.mp4"}, elo: 1780, treeScore: 60, experience: 10, interviewScore: 4.5 },
+                { id: 3, name: "Maria Rodriguez", headline: "Data Scientist, Predictive Analytics", video: {poster: "https://images.unsplash.com/photo-1579783900882-c0d3f295b5fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzM5NTd8MHwxfHNlYXJjaHw1NXx8cG9ydHJhaXR8ZW58MHx8fHwxNzA4NTQ0NDU0fDA&ixlib=rb-4.0.3&q=80&w=640", src: "https://assets.mixkit.co/videos/preview/mixkit-smiling-woman-talking-on-the-phone-in-a-cafe-34139-large.mp4"}, elo: 1690, treeScore: 72, experience: 5, interviewScore: 4.7 },
+                { id: 4, name: "Kwame Nkrumah", headline: "Growth Marketing Strategist", video: {poster: "https://images.unsplash.com/photo-1599839442031-64d1f2e466d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzM5NTd8MHwxfHNlYXJjaHw3NHx8cG9ydHJhaXR8ZW58MHx8fHwxNzA4NTQ0NDU0fDA&ixlib=rb-4.0.3&q=80&w=640", src: "https://assets.mixkit.co/videos/preview/mixkit-man-working-with-his-laptop-at-home-2868-large.mp4"}, elo: 1520, treeScore: 90, experience: 8, interviewScore: 4.2 },
+                { id: 5, name: "Sophia Lee", headline: "Cloud & DevOps Architect", video: {poster: "https://images.unsplash.com/photo-1610216790578-8cc4d271f251?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzM5NTd8MHwxfHNlYXJjaHw4Nnx8cG9ydHJhaXR8ZW58MHx8fHwxNzA4NTQ0NDU0fDA&ixlib=rb-4.0.3&q=80&w=640", src: "https://assets.mixkit.co/videos/preview/mixkit-young-woman-working-with-her-laptop-in-a-cafe-33828-large.mp4"}, elo: 1720, treeScore: 78, experience: 6, interviewScore: 4.6 },
+                { id: 6, name: "Omar Hassan", headline: "Agile Project Manager", video: {poster: "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzM5NTd8MHwxfHNlYXJjaHw1fHxwb3J0cmFpdHxlbnwwfHx8fDE3MDg1NDQzNjh8MA&ixlib=rb-4.0.3&q=80&w=640", src: "https://assets.mixkit.co/videos/preview/mixkit-man-smiling-in-a-conference-room-33825-large.mp4"}, elo: 1650, treeScore: 65, experience: 12, interviewScore: 4.3 },
+            ];
+
+            const videoFeedContainer = document.querySelector('.video-feed');
+            let currentVideo = null; // To keep track of the currently playing video
+
+            const createVideoSection = (talent) => {
+                const section = document.createElement('section');
+                section.className = 'video-section';
+                section.dataset.id = talent.id;
+
+                section.innerHTML = `
+                    <video class="absolute inset-0 w-full h-full object-cover" 
+                           src="${talent.video.src}" 
+                           poster="${talent.video.poster}" 
+                           preload="auto" loop muted playsinline></video>
+                    
+                    <div class="content-overlay flex flex-col justify-end items-start p-6 pb-12 text-white">
+                        <div class="mb-4">
+                            <h2 class="text-3xl md:text-4xl font-black mb-1">${talent.name}</h2>
+                            <p class="text-xl md:text-2xl font-light">${talent.headline}</p>
+                        </div>
+                        <ul class="w-full max-w-sm text-sm space-y-1 bg-black bg-opacity-30 p-4 rounded-lg">
+                            <li class="metric-item"><span class="">ELO Rating</span><span>${talent.elo}</span></li>
+                            <li class="metric-item"><span class="">Tree Score</span><span>${talent.treeScore}</span></li>
+                            <li class="metric-item"><span class="">Experience</span><span>${talent.experience} yrs</span></li>
+                            <li class="metric-item"><span class="">Interview Score</span><span>${talent.interviewScore}/5.0</span></li>
+                        </ul>
+                    </div>
+                    <div class="play-pause-toggle">▶</div>
+                `;
+
+                const videoElement = section.querySelector('video');
+                const playPauseToggle = section.querySelector('.play-pause-toggle');
+
+                // Toggle play/pause on click
+                section.addEventListener('click', () => {
+                    if (videoElement.paused) {
+                        videoElement.play();
+                    } else {
+                        videoElement.pause();
+                    }
+                });
+
+                videoElement.addEventListener('play', () => {
+                    section.classList.add('playing');
+                    section.classList.remove('paused');
+                    playPauseToggle.textContent = '⏸'; // Change icon to pause
+                });
+
+                videoElement.addEventListener('pause', () => {
+                    section.classList.remove('playing');
+                    section.classList.add('paused');
+                    playPauseToggle.textContent = '▶'; // Change icon to play
+                });
+                videoElement.addEventListener('ended', () => {
+                    section.classList.remove('playing');
+                    section.classList.add('paused');
+                    playPauseToggle.textContent = '▶'; // Change icon to play
+                    // Optional: loop back to beginning, or trigger next video if not looping
+                    videoElement.currentTime = 0; 
+                    videoElement.play(); // Auto-restart or move to next
+                });
+
+
+                return section;
+            };
+
+            talentsData.forEach(talent => {
+                videoFeedContainer.appendChild(createVideoSection(talent));
+            });
+
+            // Intersection Observer to handle video playback on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target.querySelector('video');
+                    if (entry.isIntersecting) {
+                        // Play video when it's in view
+                        if (currentVideo && currentVideo !== video) {
+                            currentVideo.pause();
+                        }
+                        video.play().catch(error => console.error("Video play failed:", error)); // Handle potential autoplay policy issues
+                        currentVideo = video;
+                    } else {
+                        // Pause video when it's out of view
+                        video.pause();
+                    }
+                });
+            }, {
+                threshold: 0.75 // Trigger when 75% of the video is in view
+            });
+
+            // Observe each video section
+            document.querySelectorAll('.video-section').forEach(section => {
+                observer.observe(section);
+            });
+
+            // Play the first video on load
+            const firstVideo = videoFeedContainer.querySelector('video');
+            if (firstVideo) {
+                firstVideo.play().catch(error => console.error("Initial video play failed:", error));
+                currentVideo = firstVideo;
+            }
+        });
+    </script>
+</body>
+</html>

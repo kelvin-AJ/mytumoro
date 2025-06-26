@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: The Tumoro ELO System Explained</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #0a9396, #ee9b00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .flow-line::after {
+            content: '▼';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #94d2bd;
+            font-size: 1.5rem;
+        }
+        .flow-line-horizontal::after {
+            content: '►';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94d2bd;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-black mb-2 gradient-text">The Tumoro ELO System</h1>
+            <p class="text-xl md:text-2xl font-light text-gray-600">A Dynamic, Fair, and Reliable Measure of Talent</p>
+            <p class="mt-4 max-w-3xl mx-auto text-gray-500">This system is designed to move beyond static resumes, offering a continuously updated rating that reflects true skill and credibility. It's built on a dual-ELO foundation: one for Talents and one for the Reviewers who vet them, ensuring quality and accuracy at every step.</p>
+        </header>
+
+        <main class="space-y-16">
+
+            <section id="talent-elo" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#005f73]">The Talent ELO Journey</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                    <div class="text-center lg:col-span-1">
+                        <p class="text-lg text-gray-600">Every journey starts somewhere. New talents begin with a provisional ELO rating of:</p>
+                        <div class="text-8xl font-black my-4 text-[#0a9396]">1200</div>
+                        <p class="text-gray-500">This rating evolves rapidly based on initial performance, guided by a variable K-Factor that stabilizes as more data is collected.</p>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <h3 class="text-xl font-semibold text-center mb-4 text-[#005f73]">Rating Adjustment Speed (K-Factor)</h3>
+                         <p class="text-center text-gray-600 mb-4">The K-Factor determines how much a Talent's ELO changes after each interaction. The system adapts this factor based on the Talent's experience on the platform to ensure both agility for new users and stability for established ones.</p>
+                        <div class="chart-container h-64 md:h-80">
+                            <canvas id="kFactorChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="elo-engine" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-3xl font-bold text-center mb-2 text-[#005f73]">What Fuels the ELO Engine?</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">A Talent's ELO isn't just a number; it's a composite score derived from multiple, weighted interactions. This multi-faceted approach ensures a holistic and fair representation of a candidate's abilities and desirability.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold text-center mb-4 text-[#005f73]">ELO Modifier Impact</h3>
+                        <p class="text-center text-gray-600 mb-4">Different interactions carry different weights. High-stakes events like interviews and skill reviews have a greater impact than passive signals of interest, ensuring the ELO accurately reflects proven ability.</p>
+                        <div class="chart-container h-80 md:h-96">
+                            <canvas id="modifierImpactChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-center mb-4 text-[#005f73]">The Flow of Influence</h3>
+                        <p class="text-center text-gray-600 mb-8">Multiple data points, from direct feedback to platform engagement, combine to create the final ELO rating. This diagram illustrates the key inputs.</p>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4 text-center">
+                                <div class="bg-[#e9d8a6] p-4 rounded-lg shadow">Primary: Skill Reviews</div>
+                                <div class="bg-[#e9d8a6] p-4 rounded-lg shadow">Primary: Interview Feedback</div>
+                                <div class="bg-[#f4e6c3] p-4 rounded-lg shadow">Secondary: Hiring Outcome</div>
+                                <div class="bg-[#f4e6c3] p-4 rounded-lg shadow">Secondary: Employer Bookmarks</div>
+                            </div>
+                            <div class="relative flow-line"></div>
+                             <div class="text-center mt-8">
+                                <div class="inline-block bg-[#94d2bd] text-white p-6 rounded-xl shadow-lg">
+                                    <h4 class="font-bold text-lg">TALENT ELO CALCULATION</h4>
+                                </div>
+                            </div>
+                             <div class="relative flow-line"></div>
+                             <div class="text-center mt-8">
+                                <div class="inline-block bg-[#0a9396] text-white p-6 rounded-xl shadow-lg">
+                                    <h4 class="font-bold text-lg">Final Displayed Talent ELO</h4>
+                                    <p class="text-sm font-light">(With Tree Score & Activity Bonus)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="reviewer-elo" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-3xl font-bold text-center mb-2 text-[#005f73]">The Guardian of Quality: Reviewer ELO</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">A rating system is only as reliable as its inputs. To ensure the integrity of Talent reviews, every verified Reviewer also has their own ELO. This internal rating measures their accuracy and consistency, giving more weight to feedback from more trusted sources.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                     <div>
+                        <h3 class="text-xl font-semibold text-center mb-4 text-[#005f73]">Factors Defining a Reviewer's Reliability</h3>
+                         <p class="text-center text-gray-600 mb-4">A Reviewer's ELO isn't arbitrary. It's calculated based on how their assessments correlate with real-world outcomes and peer consensus, ensuring a self-correcting system of accountability.</p>
+                        <div class="chart-container h-80 md:h-96">
+                            <canvas id="reviewerFactorsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="text-gray-700 space-y-4 text-left">
+                         <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-[#0a9396]">
+                            <h4 class="font-bold text-[#005f73]">Agreement with Peers</h4>
+                            <p>Do their ratings align with other high-ELO reviewers assessing the same talent?</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-[#ee9b00]">
+                            <h4 class="font-bold text-[#005f73]">Correlation with Outcomes</h4>
+                            <p>Do talents they rate highly succeed in interviews and get hired?</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-[#ca6702]">
+                            <h4 class="font-bold text-[#005f73]">Feedback from Talents</h4>
+                            <p>Is their feedback consistently rated as fair and helpful by the talents they review?</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-[#ae2012]">
+                            <h4 class="font-bold text-[#005f73]">Moderation History</h4>
+                            <p>Are their reviews consistently high-quality, or do they require admin intervention?</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="fairness" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                 <h2 class="text-3xl font-bold text-center mb-2 text-[#005f73]">Ensuring Fairness & Mitigating Bias</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">A fair system requires robust safeguards. We've built in multiple mechanisms to prevent manipulation and ensure that every talent's ELO is a true reflection of their merit.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <span class="text-4xl">🛡️</span>
+                        <h3 class="font-bold mt-4 text-lg text-[#005f73]">Dispute Mechanism</h3>
+                        <p class="text-gray-600 text-sm mt-2">Talents can challenge unfair reviews, triggering an admin moderation process.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <span class="text-4xl">⚖️</span>
+                        <h3 class="font-bold mt-4 text-lg text-[#005f73]">Weighted Contributions</h3>
+                        <p class="text-gray-600 text-sm mt-2">Reviews from higher-ELO reviewers have a greater impact, rewarding reliability.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <span class="text-4xl">📈</span>
+                        <h3 class="font-bold mt-4 text-lg text-[#005f73]">System Monitoring</h3>
+                        <p class="text-gray-600 text-sm mt-2">Admins monitor for unusual ELO patterns or signs of collusion to maintain system integrity.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <span class="text-4xl">👨‍👩‍👧‍👦</span>
+                        <h3 class="font-bold mt-4 text-lg text-[#005f73]">Multiple Data Points</h3>
+                        <p class="text-gray-600 text-sm mt-2">ELO is aggregated from many sources, smoothing out the impact of any single biased opinion.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-16 py-8 border-t border-gray-200">
+            <p class="font-bold text-xl text-[#005f73]">Tumoro: Every talent vetted. Every hire reliable.</p>
+            <p class="text-gray-500 text-sm mt-2">&copy; 2025 Tumoro. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const sharedTooltipCallback = {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                    return label.join(' ');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            };
+            
+            const brilliantBlues = {
+                darkBlue: '#005f73',
+                teal: '#0a9396',
+                aqua: '#94d2bd',
+                paleYellow: '#e9d8a6',
+                gold: '#ee9b00',
+                orange: '#ca6702',
+                darkOrange: '#bb3e03',
+                red: '#ae2012',
+            };
+
+            const wrapLabel = (str, maxWidth = 16) => {
+                if (str.length <= maxWidth) return str;
+                const words = str.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + ' ' + word).trim().length > maxWidth && currentLine.length > 0) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = (currentLine + ' ' + word).trim();
+                    }
+                }
+                if (currentLine.length > 0) {
+                    lines.push(currentLine);
+                }
+                return lines;
+            };
+
+            const kFactorCtx = document.getElementById('kFactorChart');
+            if (kFactorCtx) {
+                new Chart(kFactorCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['New Talents (Provisional)', 'Established Talents', 'High ELO Talents'],
+                        datasets: [{
+                            label: 'K-Factor Value (Rating Change Speed)',
+                            data: [65, 32, 20],
+                            backgroundColor: [brilliantBlues.aqua, brilliantBlues.teal, brilliantBlues.darkBlue],
+                            borderColor: [brilliantBlues.aqua, brilliantBlues.teal, brilliantBlues.darkBlue],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...sharedTooltipCallback,
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'K-Factor Value' }
+                            }
+                        },
+                        plugins: {
+                             ...sharedTooltipCallback.plugins,
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            const modifierImpactCtx = document.getElementById('modifierImpactChart');
+            if (modifierImpactCtx) {
+                new Chart(modifierImpactCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: [
+                            wrapLabel('Structured Skill Reviews'), 
+                            wrapLabel('Interview Feedback'), 
+                            wrapLabel('Hiring Outcome'), 
+                            wrapLabel('Engagement & Activity'), 
+                            wrapLabel('Employer Bookmarks')
+                        ],
+                        datasets: [{
+                            label: 'Impact on ELO',
+                            data: [9, 8, 10, 4, 3],
+                            fill: true,
+                            backgroundColor: 'rgba(148, 210, 189, 0.4)',
+                            borderColor: brilliantBlues.teal,
+                            pointBackgroundColor: brilliantBlues.teal,
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: brilliantBlues.teal
+                        }]
+                    },
+                    options: {
+                        ...sharedTooltipCallback,
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        elements: {
+                            line: {
+                                borderWidth: 3
+                            }
+                        },
+                        scales: {
+                            r: {
+                                suggestedMin: 0,
+                                suggestedMax: 10,
+                                pointLabels: {
+                                  font: {
+                                    size: 12
+                                  }
+                                }
+                            }
+                        },
+                        plugins: {
+                             ...sharedTooltipCallback.plugins,
+                            legend: {
+                                position: 'top',
+                            }
+                        }
+                    }
+                });
+            }
+            
+            const reviewerFactorsCtx = document.getElementById('reviewerFactorsChart');
+            if (reviewerFactorsCtx) {
+                new Chart(reviewerFactorsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            wrapLabel('Agreement with Other Reviewers'),
+                            wrapLabel('Correlation with Employer Outcomes'),
+                            wrapLabel('Feedback from Talents Reviewed'),
+                            wrapLabel('Admin Moderation History')
+                        ],
+                        datasets: [{
+                            label: 'Importance',
+                            data: [35, 40, 15, 10],
+                            backgroundColor: [
+                                brilliantBlues.teal,
+                                brilliantBlues.gold,
+                                brilliantBlues.orange,
+                                brilliantBlues.red
+                            ],
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        ...sharedTooltipCallback,
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            ...sharedTooltipCallback.plugins,
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    boxWidth: 20,
+                                    padding: 20
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
